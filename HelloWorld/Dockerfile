@@ -3,11 +3,11 @@ WORKDIR /app
 EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build
-WORKDIR /src
+WORKDIR /app
 COPY HelloWorld/HelloWorld.csproj HelloWorld/
 RUN dotnet restore HelloWorld/HelloWorld.csproj
 COPY . .
-WORKDIR /src/HelloWorld
+WORKDIR /app/HelloWorld
 RUN dotnet build HelloWorld.csproj -c Release -o /app
 
 FROM build AS publish
