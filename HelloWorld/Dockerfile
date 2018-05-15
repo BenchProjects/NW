@@ -1,16 +1,13 @@
 FROM microsoft/aspnetcore:2.0 AS base
-RUN echo "$PWD"
 WORKDIR /app
 EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build
-WORKDIR /src
+WORKDIR src/HelloWorld
+COPY HelloWorld.csproj .
 
-COPY HelloWorld.csproj HelloWorld/
-
-RUN dotnet restore HelloWorld/HelloWorld.csproj
+RUN dotnet restore HelloWorld.csproj
 COPY . .
-WORKDIR /src/HelloWorld
 RUN dotnet build HelloWorld.csproj -c Release -o /app
 
 FROM build AS publish
