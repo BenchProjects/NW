@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+@model MyModel
+
+<h2>Deployed in docker container with VSTS</h2>
+
+<div>
+    @Html.Label("Model Id")
+    @Html.TextBox("FreeTxt", Model.ID)
+</div>
+<div>
+    @Html.Label("Message from CL")
+    @Html.TextBox("Message", Model.Message)
+</div>

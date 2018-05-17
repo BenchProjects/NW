@@ -5,7 +5,6 @@ EXPOSE 80
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR src/HelloWorld
 COPY HelloWorld.csproj .
-
 RUN dotnet restore HelloWorld.csproj
 COPY . .
 RUN dotnet build HelloWorld.csproj -c Release -o /app
