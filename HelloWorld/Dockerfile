@@ -1,16 +1,19 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
+EXPOSE 80
 
-# copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
+FROM microsoft/aspnetcore-build:2.0 AS build
+WORKDIR src/HelloWorld
+COPY HelloWorld.csproj .
 
-# copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet restore HelloWorld.csproj
+COPY . .
+RUN dotnet build HelloWorld.csproj -c Release -o /app
 
-# build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM build AS publish
+RUN dotnet publish HelloWorld.csproj -c Release -o /app
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "HelloWorld.dll"]
