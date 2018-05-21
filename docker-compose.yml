@@ -5,4 +5,4 @@ services:
     image: ${DOCKER_REGISTRY}helloworld
     build:
       context: .
-      dockerfile: HelloWorld/Dockerfile
+      dockerfile: Dockerfile
