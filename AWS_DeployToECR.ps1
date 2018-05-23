@@ -16,9 +16,18 @@ Write-Output "Tag: $tag"
 Write-Output "Attempting to log in to AWS"
 Invoke-Expression -Command (Get-ECRLoginCommand -Region us-east-1).Command
 
-$? 
-Write-Output "Login succeeded"
+if (-not $?)
+{
+    throw "Login failed, please check AWS credentials are set up on this host"
+} 
 
-#docker tag 825688464055.dkr.ecr.us-east-1.amazonaws.com/benchprojects/nw:$tag 825688464055.dkr.ecr.us-east-1.amazonaws.com/pws/container_repo:latest
 
-#docker push 825688464055.dkr.ecr.us-east-1.amazonaws.com/pws/container_repo:latest
+docker tag 825688464055.dkr.ecr.us-east-1.amazonaws.com/benchprojects/nw:$tag 825688464055.dkr.ecr.us-east-1.amazonaws.com/pws/container_repo:latest
+
+docker push 825688464055.dkr.ecr.us-east-1.amazonaws.com/pws/container_repo:latest
+
+if ($?){
+    "Script completed successfully"
+} else {
+    "Script failed"
+}
