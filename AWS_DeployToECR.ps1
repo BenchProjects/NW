@@ -16,6 +16,7 @@ Write-Output "Image name: $image"
 Write-Output "Tag: $tag"
 
 Write-Output "Attempting to log in to AWS"
+Set-AWSCredential -ProfileName MyProfileName
 Invoke-Expression -Command (Get-ECRLoginCommand -Region us-east-1).Command
 
 if (-not $?)
