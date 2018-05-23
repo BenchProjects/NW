@@ -1,5 +1,7 @@
 ﻿param([Int32]$tag=0, $image="")
 
+Write-Output "Script version: 1"
+
 if ($tag -eq 0)
 {
     throw "Parameter exception, tag was not passed"
