@@ -46,6 +46,8 @@ function verify-parameters(){
         throw "Parameter exception, repository name was not passed"
     }
 
+    $image = $image.ToLower()
+
     Write-Output "Repository name: $awsRepositoryName"
     Write-Output "Image name: $image"
     Write-Output "Tag: $tag"
@@ -58,13 +60,13 @@ function push-to-ecr([string]$finalRepositoryImageName = "", $repositoryPrefix =
         throw "Unable to determine aws repository to push to"
     }
 
-    $taggedImageReference = $repositoryPrefix + "/" + $image + ":" + $tag
+    $taggedImageReference = ($repositoryPrefix + "/" + $image + ":" + $tag).ToLower()
 
-    docker tag $taggedImageReference $finalRepositoryImageName
+    docker tag $taggedImageReference $finalRepositoryImageName.ToLower()
 
     Write-Output "Source image successfully tagged"
 
-    docker push $finalRepositoryImageName
+    docker push $finalRepositoryImageName.ToLower()
 }
 
 Write-Output "Script version: 1"
