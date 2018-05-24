@@ -1,7 +1,8 @@
 ﻿param([Int32]$tag=0, $image="", $awsRepositoryName = "")
 
 #Example call
-# AWS_DeployToECR.ps1 38 123.dkr.ecr.us-east-1.amazonaws.com/myproject/nw mycontainerrepo
+# AWS_DeployToECR.ps1 38 myLocalContainerImage myRemoteAWSContainerImage
+# assumes myLocalContainerImage is provided without container registry prefix
 
 #Prerequisites:
 # Machine must have Docker and AWS tools installed.
@@ -26,7 +27,7 @@ function login-To-ecr(){
         throw "Login failed, please check AWS credentials are set up on this host"
     } 
     
-    return $tempRepositoryImageName
+    return $tempRepositoryImageName, $imagePrefix + "/" + $image
 }
 
 function verify-parameters(){
@@ -50,14 +51,14 @@ function verify-parameters(){
     Write-Output "Tag: $tag"
 }
 
-function push-to-ecr([string]$finalRepositoryImageName = ""){
+function push-to-ecr([string]$finalRepositoryImageName = "", $repositoryPrefix = ""){
 
     if ($finalRepositoryImageName -eq "")
     {
         throw "Unable to determine aws repository to push to"
     }
 
-    $taggedImageReference = $image + ":" + $tag
+    $taggedImageReference = $repositoryPrefix + "/" + $image + ":" + $tag
 
     docker tag $taggedImageReference $finalRepositoryImageName
 
@@ -76,10 +77,11 @@ verify-parameters
 Write-Output "Attempting to log in to AWS"
 $loginOutput = login-To-ecr
 $finalRepositoryImageName =$loginOutput[1]
+$registryContainerPrefix = $loginOutput[2]
 
 #3 push container image to AWS
 Write-Output "Attempting to push to AWS"
-push-to-ecr $finalRepositoryImageName
+push-to-ecr $finalRepositoryImageName $registryContainerPrefix
 
 
 if ($?){
