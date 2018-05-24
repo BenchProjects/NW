@@ -18,7 +18,13 @@ Write-Output "Tag: $tag"
 
 Write-Output "Attempting to log in to AWS"
 
-Invoke-Expression -Command (aws ecr get-login --no-include-email --region us-east-1)
+$loginStatement = aws ecr get-login --no-include-email --region us-east-1 
+$loginStatementArray = $loginStatement -split ' '
+$username = $loginStatementArray[3]
+$password = $loginStatementArray[5]
+$ecr_endpoint = $loginStatementArray[6]
+
+echo "$password" | docker login -u $username --password-stdin $ecr_endpoint
 
 if (-not $?)
 {
