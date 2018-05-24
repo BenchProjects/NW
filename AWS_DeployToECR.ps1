@@ -1,5 +1,6 @@
 ﻿param([Int32]$tag=0, $image="")
 
+
 Write-Output "Script version: 1"
 
 if ($tag -eq 0)
@@ -16,8 +17,8 @@ Write-Output "Image name: $image"
 Write-Output "Tag: $tag"
 
 Write-Output "Attempting to log in to AWS"
-Set-AWSCredential -ProfileName MyProfileName
-Invoke-Expression -Command (Get-ECRLoginCommand -Region us-east-1).Command
+
+Invoke-Expression -Command (aws ecr get-login --no-include-email --region us-east-1)
 
 if (-not $?)
 {
